@@ -18,32 +18,38 @@ type Message = {
 };
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content:
+        "hey i am your agent I can assist you with booking, rescheduling, or retrieving details about your appointments. If you need help with any of these, feel free to ask!",
+    },
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() === "") return;
-    
+
     const userMessage: Message = { role: "user", content: input };
-    
+
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-  
+
     setInput("");
     setIsLoading(true);
 
     try {
       const response = await axios.post(
         "/api/generate",
-        JSON.stringify({userContext: {...messages,...userMessage}})
+        JSON.stringify({ userContext: { ...messages, ...userMessage } })
       );
 
       // const reader = data.getReader()
       // const decoder = new TextDecoder()
       // let done = false
       // let accumulatedResponse = ""
-          
+
       // while (!done) {
       //   const { value, done: doneReading } = await reader.read()
       //   done = doneReading
